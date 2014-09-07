@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>ERNI Moods</title>
+    <link href='http://fonts.googleapis.com/css?family=Give+You+Glory' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" media="screen" href="./stylesheets/main.css">
+  
+    <script src="./dist/angular.js"></script>
+    <script src="./dist/angular-route.js"></script>	
+	<script src="./dist/angular-cookies.js"></script>
+	
+	<script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
+	<script src='./dist/lodash.underscore.min.js'></script>
+	<script src='./dist/angular-google-maps.min.js'></script>
+	<script src='./dist/d3.min.js'></script>
+		
+    <script data-require="restangular@*" data-semver="1.3.1" src="http://cdnjs.cloudflare.com/ajax/libs/restangular/1.3.1/restangular.js"></script>
+	
+    <script type='text/javascript' src='./js/main.js'></script>
+</head>
+<body ng-app="app">
+	<header>
+		<div class="loginWrapper" ng-controller="LoginController">
+			<div class="login">
+				<img src="./img/profile-icon.png"/>
+				<!--{{ profile.username }}-->
+				<a class="account">User &#x25BC</a>
+				<div class="submenuAccount">
+					<ul class="root">
+						<li class="item"></i><a ng-click="logout()">logout</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="headerWrapper">
+			<div class="logo">
+				<a href="#/login"><img class="logo-img" src="./img/logo.png" alt="ERNI Consulting"></a>
+				<span class="title">ERNI moods</span>
+			</div>		
+		
+			<nav class="menuWrapper">
+				<div class="menuBar">
+					<ul id="dropNav" class="menu">
+						<li class="item"><a href="#/moodselection">MyMood</a></li>
+						<li class="item"><a href="#/location">Moods near me</a></li>
+						<li class="item"><a href="#/history">History</a></li>
+						<li class="item"><a href="#/about">About</a></li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+	</header>
+
+	<div class="contentWrapper">
+		<div ng-view></div>
+	</div>
+</body>
+</html>

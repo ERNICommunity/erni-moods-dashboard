@@ -1,0 +1,16 @@
+<div class="container">
+
+    Please enter you login details in the form below. If you are not yet a member, please email community@erni.ch for an
+    account.
+
+    <form name="loginForm" ng-controller="LoginController" ng-submit="login(credentials)" novalidate>
+        <label for="username">Username:</label>
+        <input type="text" id="username"
+               ng-model="credentials.username">
+        <label for="password">Password:</label>
+        <input type="password" id="password"
+               ng-model="credentials.password">
+        <button type="submit">Login</button>
+        <button type="button" ng-click="logout()"> Logout</button>
+    </form>
+</div>

@@ -1,0 +1,300 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+html,
+body {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    background: white;
+}
+
+ul {
+    list-style: none;
+}
+
+ul li {
+    display: block;
+    position: relative;
+    float: left;
+    z-index: 10000;
+}
+
+li ul {
+    display: none;
+}
+
+ul li a {
+    display: inline-block;
+    padding: 8px 8px 8px 8px;
+
+    text-decoration: none;
+    white-space: nowrap;
+    color: #636466;;
+    width: 180px;
+    transition: all 0.3s;
+}
+
+ul li a:hover {
+
+    background: blue;
+    color: white;
+    text-decoration: none;
+}
+
+li:hover ul {
+    display: block;
+    position: absolute;
+}
+
+li:hover li {
+    float: none;
+}
+
+li:hover a {
+    background: #636466;
+    color: white;
+}
+
+li:hover li a:hover {
+    background: #428BCA;
+    width: 100%;
+}
+
+li:hover li a:hover {
+    background: blue;
+}
+
+#dropNav li ul li {
+    border-top: 0px;
+}
+
+#dropNav ul {
+    padding-left: 0px;
+    background-color: #4F5052;
+    margin-top: 0px;
+    border-radius: 5px;
+}
+
+a {
+    text-decoration: none;
+}
+
+span.title {
+    text-transform: uppercase;
+    color: #D0D0D1;
+}
+
+nav.menuWrapper {
+    background: #D0D0D1;
+    font-size: 1.2em;
+    text-decoration: none;
+    border-radius: 5px;
+    height: 43px;
+}
+
+.headerWrapper{
+	width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.menuBar {
+    margin-top: 1px;
+    display: inline;
+}
+
+.loginWrapper {
+    background-color: #D0D0D1;
+    height: 35px;
+    color: white;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.login {
+    float: right;
+    margin-right: 10%;
+}
+
+.logo {
+    padding-left: 30px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    vertical-align: 50%;
+}
+
+.logo-img {
+    width: 150px;
+    border-right: solid #D0D0D1 1px;
+    padding-right: 20px;
+}
+
+.logo span {
+    font-size: 1.9em;
+    padding-left: 10px;
+    position: relative;
+    top: -12px;
+}
+
+a.account {
+    text-decoration: none;
+    color: white;
+}
+
+.submenuAccount {
+    display: none;
+    position: absolute;
+    background-color: #9d9fa2;;
+    color: white;
+    width: 190px;
+    margin-top: 10px;
+    padding-left: 0px;
+    border-radius: 5px;
+}
+
+.submenuAccount ul:before {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 10px;
+    top: -10px;
+    border: 10px solid;
+    border-color: transparent #9d9fa2 #9d9fa2 transparent;
+}
+
+.theNav .submenuAccount li {
+    width: auto;
+    min-width: 100%;
+    color: #ddd;
+    text-decoration: none;
+    background-color: #636466;;
+}
+
+.tags {
+    text-align: center;
+    height: 50px;
+    overflow: hidden;
+    margin-top: 5px;
+    position: relative;
+    top: 40px;
+}
+
+.contentWrapper {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+	text-align: center;
+}
+
+.smileyListItem  {
+    position: relative;
+    width: 380px;
+    margin: 10px;
+	
+	border-radius: 7px;
+	background: #fff;
+	border: 1px solid rgba(0,0,0,0.15);
+    box-shadow: 0 1px 1px rgba(50,50,50,0.1);
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+	font-size: 1.8em;
+    color: #205081;
+	clear:both;
+}
+
+.smileyListItem:hover {
+    background: #3A7BB1;
+	color: white;
+	
+}
+
+.smileyImage{
+	padding: 10px;
+	float:left;
+}
+
+.moodText{
+	padding: 15px 40px;
+	position: relative;
+	float:left;
+}
+
+.info_content {
+    width: 250px;
+	height: 100px;
+}
+
+.angular-google-map-container {
+	position: relative;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	height: 600px;
+	width: 800px;
+}
+
+.axis path,
+.axis line{
+  fill: none;
+  stroke:black;
+  shape-rendering:crispEdge;
+}
+
+.axis text{
+  font-family: sans-serif;
+  font-size: 10px;
+}
+
+#pos{
+	text-align: center;
+	width:800px; 
+	height:600px; 
+	margin-left: auto; 
+	margin-right: auto;
+}
+
+#moodSelection {
+	width: 500px;
+	height: 520px;
+	margin: 30px auto; 
+	padding: 10px 20px;
+	background: #E0E0E0;
+	border: 1px solid #e1e1e1;
+	-moz-box-shadow: 0px 0px 8px #444;
+	-webkit-box-shadow: 0px 0px 8px #444;
+}
+
+#SignUpFormWrapper{
+	width: 500px;
+	height: 450px;
+	margin: 30px auto; 
+	padding: 30px 30px;
+	background: #E0E0E0;
+	border: 1px solid #e1e1e1;
+	-moz-box-shadow: 0px 0px 8px #444;
+	-webkit-box-shadow: 0px 0px 8px #444;
+}
+#myCanvas{
+	width:600px;
+	height:400px;
+}
+
+#moodSelectionTitle{
+	padding: 20px 10px;
+}
+
+#mapPosition{
+	text-align: center;
+	width:800px; 
+	height:600px; 
+	margin-left: auto; 
+	margin-right: auto;
+}
+
