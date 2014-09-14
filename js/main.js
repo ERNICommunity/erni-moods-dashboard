@@ -1,8 +1,30 @@
 (function () {
+    angular.module('RestangularApp', ["restangular"]);
+
+    angular.module('RestangularApp').config(function (RestangularProvider, $httpProvider) {
+
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
+        RestangularProvider.setBaseUrl('https://api.mongolab.com/api/1/databases/visualfacilitation/collections');
+        RestangularProvider.setDefaultRequestParams({
+            apiKey: 'mFxXtZ1opPpsET7fdrmZ7LNjI3pd2OhB'
+        })
+        RestangularProvider.setRestangularFields({
+            id: '_id.$oid'
+        });
+        RestangularProvider.setRequestInterceptor(function (elem, operation, what) {
+            if (operation === 'put') {
+                elem._id = undefined;
+                return elem;
+            }
+            return elem;
+        });
+    });
 
 	angular.module('GoogleMaps', ['google-maps']);
 
-    var app = angular.module('app', ['ngRoute', 'ngCookies', 'GoogleMaps']);
+    var app = angular.module('app', ['RestangularApp', 'ngRoute', 'ngCookies', 'GoogleMaps']);
 
     app.config(['$routeProvider',
             function ($routeProvider) {
@@ -29,9 +51,14 @@
                         templateUrl: 'Sections/login.html',
                         controller: 'LoginController'
                     }).
+					when('/register', {
+
+                        templateUrl: 'Sections/register.html',
+                        controller: 'LoginController'
+                    }).
                     when('/', {
 
-                        redirectTo: '/login'
+                        redirectTo: '/moodselection'
                     });
             }]).run(function ($rootScope, $location) {
             // register listener to watch route changes
@@ -41,15 +68,50 @@
                     if (next.templateUrl == "Sections/login.html") {
                         // already going to #login, no redirect needed
                     } else {
-                        // not going to #login, we should redirect now
-                        //$location.path("/login");
+                        if (next.templateUrl != "Sections/register.html")//not going to #login or #register, we should redirect now
+                            $location.path("/login");
                     }
+                } else {
                 }
             });
-        });
+        }).service('Global', ['$location', '$rootScope', function ($location) {
+            var global;
 
-    app.controller('LoginController', ['$scope', '$rootScope', '$routeParams', '$http', '$cookies',
-        function LoginCtrl($scope, $rootScope, $routeParams, $http, $cookies) {
+            return {
+                showCurrentUser: function () {
+                    return $rootScope.loggedUser;
+                }
+
+            }
+        }]);
+		
+    app.controller('RegistrationController', ['$scope', 'Restangular', '$routeParams', '$http',
+        function RegistrationCtrl($scope, db, $routeParams, $http) {
+
+            $scope.title = $routeParams.tag;
+            $scope.register = function () {
+                if ($scope.details.password !== $scope.details.confirmPassword) {
+                    alert("Passwords do not match.");
+                    return;
+                }
+
+                $http({
+                    method: 'POST',
+                    url: 'http://moodyrest.azurewebsites.net/users',
+                    headers: {'Content-Type': 'application/json'},
+                    data: JSON.stringify($scope.details)})
+                    .success(function (data) {
+                        alert('User created successfully');
+
+                    })
+                    .error(function (data) {
+                        alert(data.message);
+                    });
+            };
+        }]);
+
+    app.controller('LoginController', ['$scope', '$rootScope', 'Restangular', '$routeParams', '$http', '$cookies',
+        function LoginCtrl($scope, $rootScope, db, $routeParams, $http, $cookies) {
 
             $scope.setUserProfileInViewsModel = function () {
                 $scope.profile = angular.fromJson($cookies.UserCredential);
@@ -59,8 +121,10 @@
             if ($cookies.UserCredential != undefined) {
 //                $scope.setUserProfileInViewsModel();
                 $rootScope.loggedUser = $cookies.UserCredential;
+
             } else {
                 $rootScope.loggedUser = null;
+                $scope.profile = null;
             }
 
             $scope.logout = function () {
@@ -68,6 +132,16 @@
                 $cookies.UserCredential = undefined;
                 $rootScope.loggedUser = null;
                 changeLocation('/#/login', false);
+
+            }
+
+            $scope.showUserName = function () {
+                if ($rootScope.loggedUser) {
+                    var loggedUser = JSON.parse($rootScope.loggedUser);
+                    return loggedUser.username;
+                } else {
+                    return 'Login';
+                }
             }
 
             //be sure to inject $scope and $location
@@ -86,13 +160,52 @@
                 }
             };
 
+            $scope.login = function () {
+                $http({ method: 'GET', url: 'http://moodyrest.azurewebsites.net/users/' + $scope.credentials.username + '/' + $scope.credentials.password })
+                    .success(function (data) {
+                        $cookies.UserCredential = JSON.stringify(data);
+                        $scope.setUserProfileInViewsModel();
+                        window.location.href = '/';
+                    })
+                    .error(function (data) {
+                        alert('login error');
+                    });
+            }
+
+            $scope.register = function () {
+                if ($scope.details.password !== $scope.details.confirmPassword) {
+                    alert("Passwords do not match.");
+                    return;
+                }
+
+                $http({
+                    method: 'POST',
+                    url: 'http://moodyrest.azurewebsites.net/users',
+                    headers: {'Content-Type': 'application/json'},
+                    data: JSON.stringify($scope.details)})
+                    .success(function (data) {
+                        alert('User created successfully');
+                        window.location.href = '/#/login';
+
+                    })
+                    .error(function (data) {
+                        alert(data.message);
+                    });
+            };
+
         }]);
 		
-   app.controller('MoodSelectionController', ['$scope', '$rootScope', '$routeParams',
-        function LoginCtrl($scope, $rootScope, $routeParams) {
+   app.controller('MoodSelectionController', ['$scope', '$rootScope', '$routeParams','$http',
+        function LoginCtrl($scope, $rootScope, $routeParams, $http) {
 
 			$scope.moodHappy = function(){
 				alert('you are happy today');
+				
+				$http.get('http://moodyrest.azurewebsites.net/moods').success(function(data) {
+
+					
+					console.log(data);
+				});			
 			}
 			
 			$scope.moodGood = function(){

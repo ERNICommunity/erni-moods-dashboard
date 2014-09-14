@@ -12,6 +12,21 @@ body {
     background: white;
 }
 
+label, input {
+    /* The modal dialog URL field */
+    display: block;
+    padding: 3px;
+}
+
+label {
+    font-size: 10px;
+}
+
+fieldset {
+    border: 0;
+    margin-top: 10px;
+}
+
 ul {
     list-style: none;
 }
@@ -34,7 +49,7 @@ ul li a {
     text-decoration: none;
     white-space: nowrap;
     color: #636466;;
-    width: 180px;
+    width: 140px;
     transition: all 0.3s;
 }
 
@@ -79,6 +94,17 @@ li:hover li a:hover {
     border-radius: 5px;
 }
 
+#dropNav ul:before {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 10px;
+    top: -10px;
+    border: 10px solid;
+    border-color: transparent #666 #666 transparent;
+}
+
 a {
     text-decoration: none;
 }
@@ -93,7 +119,7 @@ nav.menuWrapper {
     font-size: 1.2em;
     text-decoration: none;
     border-radius: 5px;
-    height: 43px;
+    height: 40px;
 }
 
 .headerWrapper{
@@ -105,6 +131,13 @@ nav.menuWrapper {
 .menuBar {
     margin-top: 1px;
     display: inline;
+}
+
+.containerLogin {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 50px;
 }
 
 .loginWrapper {
@@ -137,7 +170,7 @@ nav.menuWrapper {
     font-size: 1.9em;
     padding-left: 10px;
     position: relative;
-    top: -12px;
+    top: 5px;
 }
 
 a.account {
@@ -146,7 +179,7 @@ a.account {
 }
 
 .submenuAccount {
-    display: none;
+    display: block;
     position: absolute;
     background-color: #9d9fa2;;
     color: white;
@@ -155,6 +188,12 @@ a.account {
     padding-left: 0px;
     border-radius: 5px;
 }
+
+.submenuAccount li {
+    color: white;
+
+}
+
 
 .submenuAccount ul:before {
     content: ' ';
@@ -188,7 +227,6 @@ a.account {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
-	text-align: center;
 }
 
 .smileyListItem  {
@@ -223,6 +261,18 @@ a.account {
 	padding: 15px 40px;
 	position: relative;
 	float:left;
+}
+
+.moodHistoryWrapper{
+	text-align: center;
+	margin-left: auto; 
+	margin-right: auto;
+}
+
+.aboutWrapper{
+	text-align: center;
+	margin-left: auto; 
+	margin-right: auto;
 }
 
 .info_content {
@@ -288,6 +338,7 @@ a.account {
 
 #moodSelectionTitle{
 	padding: 20px 10px;
+	text-align: center;
 }
 
 #mapPosition{

@@ -5,8 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <title>ERNI Moods</title>
     <link href='http://fonts.googleapis.com/css?family=Give+You+Glory' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" media="screen" href="./stylesheets/main.css">
-  
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" media="screen" href="./stylesheets/main.css">
+   
     <script src="./dist/angular.js"></script>
     <script src="./dist/angular-route.js"></script>	
 	<script src="./dist/angular-cookies.js"></script>
@@ -20,16 +22,18 @@
 	
     <script type='text/javascript' src='./js/main.js'></script>
 </head>
+
 <body ng-app="app">
+	<div id="window_wrap">
 	<header>
 		<div class="loginWrapper" ng-controller="LoginController">
 			<div class="login">
 				<img src="./img/profile-icon.png"/>
-				<!--{{ profile.username }}-->
-				<a class="account">User &#x25BC</a>
+				<a class="account">{{ showUserName() }} &#x25BC</a>
 				<div class="submenuAccount">
 					<ul class="root">
-						<li class="item"></i><a ng-click="logout()">logout</a></li>
+                        <li class="item"><a href="#/register">Register new user</a></li>
+                        <li class="item"><a ng-click="logout()">logout</a></li>
 					</ul>
 				</div>
 			</div>
@@ -37,7 +41,7 @@
 
 		<div class="headerWrapper">
 			<div class="logo">
-				<a href="#/login"><img class="logo-img" src="./img/logo.png" alt="ERNI Consulting"></a>
+				<a href="/"><img class="logo-img" src="./img/logo.png" alt="ERNI Consulting"></a>
 				<span class="title">ERNI moods</span>
 			</div>		
 		
@@ -55,7 +59,13 @@
 	</header>
 
 	<div class="contentWrapper">
-		<div ng-view></div>
+		<div id="body_wrap">
+			<div ng-view></div>
+		</div>
+	</div>
+	
+	<div class="recent-view"></div>
+	
 	</div>
 </body>
 </html>
