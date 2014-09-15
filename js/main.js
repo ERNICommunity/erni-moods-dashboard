@@ -201,18 +201,25 @@
 			$scope.moodHappy = function(){
 				alert('you are happy today');
 				
-				$http({ method: 'GET', url: 'http://moodyrest.azurewebsites.net/moods/user2'})
+				$http({ method: 'GET', url: 'http://moodyrest.azurewebsites.net/moods?username=user2'})
 					.success(function(data) {
 					console.log(data);
 				})
 				.error(function (data) {
 					console.log(data);
-                    alert("error reading data from moods back end");
                 });
 			}
 			
 			$scope.moodGood = function(){
 				alert('your mood is good');
+				
+				$http({ method: 'GET', url: 'http://moodyrest.azurewebsites.net/moods'})
+					.success(function(data) {
+					console.log(data);
+				})
+				.error(function (data) {
+					console.log(data);
+                });
 			}
 			
 			$scope.moodSoSoLaLa = function(){
