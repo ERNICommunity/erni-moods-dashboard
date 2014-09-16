@@ -349,3 +349,10 @@ a.account {
 	margin-right: auto;
 }
 
+/* validation styles */
+.ng-invalid {
+    border-color: red;
+}
+.ng-valid {
+    border-color: green;
+}

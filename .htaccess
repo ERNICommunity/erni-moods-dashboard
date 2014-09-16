@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "mobile site"
+AuthUserFile /home/visualfacilitation/www/.htpasswd
+Require valid-user
