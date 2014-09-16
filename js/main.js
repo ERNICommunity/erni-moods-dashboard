@@ -22,8 +22,6 @@
         });
     });
 
-	angular.module('GoogleMaps', ['google-maps']);
-
     var app = angular.module('app', ['RestangularApp', 'ngRoute', 'ngCookies', 'Location']);
 
     app.config(['$routeProvider',
