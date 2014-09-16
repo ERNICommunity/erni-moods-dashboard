@@ -199,15 +199,53 @@
         function LoginCtrl($scope, $rootScope, $routeParams, $http) {
 
 			$scope.moodHappy = function(){
-				alert('you are happy today');
 				
-				$http({ method: 'GET', url: 'http://moodyrest.azurewebsites.net/moods?username=user2'})
-					.success(function(data) {
-					console.log(data);
-				})
-				.error(function (data) {
-					console.log(data);
-                });
+				var options = {
+				  enableHighAccuracy: true,
+				  timeout: 5000,
+				  maximumAge: 0
+				};
+		
+				function success(pos) {
+				  var crd = pos.coords;
+				  //var crd =  {latitude: 46.8944, longitude: 8.1723 };
+				  console.log('Your current position is:');
+				  console.log('Latitude : ' + crd.latitude);
+				  console.log('Longitude: ' + crd.longitude);
+				  console.log('More or less ' + crd.accuracy + ' meters.');
+				  
+				  alert('you are happy today and have the location: ' + crd.latitude + ' ' + crd.longitude);
+				  
+				  				var moodEntry = {
+					"username": "stefan",
+					"location": [
+						crd.latitude,
+						crd.longitude
+					],
+					
+					"comment": "my mood is super good :-)",
+					"mood": 5				
+				}
+				
+				$http({
+                    method: 'POST',
+                    url: 'http://moodyrest.azurewebsites.net/moods',
+                    headers: {'Content-Type': 'application/json'},
+                    data: JSON.stringify(moodEntry)})
+                    .success(function (data) {
+                        alert('Your mood was successfully added to the data base!');
+                    })
+                    .error(function (data) {
+                        alert(data.message);
+                    });
+				  
+				};
+
+				function error(err) {
+				  console.warn('ERROR(' + err.code + '): ' + err.message);
+				};
+
+				navigator.geolocation.getCurrentPosition(success, error, options);
 			}
 			
 			$scope.moodGood = function(){
