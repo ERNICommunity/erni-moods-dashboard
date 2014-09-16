@@ -1,7 +1,14 @@
 <google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" style="width:100%">
     <markers models="moodMarkers" coords="'self'" icon="'icon'" click="'onClick'" events="markersEvents">
         <windows show="show">
-            <div ng-non-bindable>{{title}}</div>
+            <div ng-non-bindable>
+                <span >User: {{user}}</span>
+                <br>
+                <span>Mood: {{mood}}</span>
+                <br>
+                <span>Comment: {{comment}}</span>
+            </div>
+            <br>
         </windows>
     </markers>
 </google-map>	
