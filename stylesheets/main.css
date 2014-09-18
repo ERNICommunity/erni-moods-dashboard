@@ -179,7 +179,7 @@ a.account {
 }
 
 .submenuAccount {
-    display: block;
+    display: none;
     position: absolute;
     background-color: #9d9fa2;;
     color: white;

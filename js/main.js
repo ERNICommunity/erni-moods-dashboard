@@ -1,90 +1,59 @@
 (function () {
-    angular.module('RestangularApp', ["restangular"]);
 
-    angular.module('RestangularApp').config(function (RestangularProvider, $httpProvider) {
+    var app = angular.module('app', ['ngRoute', 'ngCookies', 'Location']);
 
-        $httpProvider.defaults.useXDomain = true;
-        delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
-        RestangularProvider.setBaseUrl('https://api.mongolab.com/api/1/databases/visualfacilitation/collections');
-        RestangularProvider.setDefaultRequestParams({
-            apiKey: 'mFxXtZ1opPpsET7fdrmZ7LNjI3pd2OhB'
-        })
-        RestangularProvider.setRestangularFields({
-            id: '_id.$oid'
+    app.config(['$routeProvider', function ($routeProvider) {
+        $routeProvider.
+        when('/moodselection', {
+            templateUrl: 'Sections/moodselection.html',
+            controller: 'MoodSelectionController'
+        }).
+        when('/location', {
+            templateUrl: 'Sections/location.html',
+            controller: 'LocationController'
+        }).
+        when('/history', {
+            templateUrl: 'Sections/history.html',
+            controller: 'HistoryController'
+        }).
+        when('/about', {
+            templateUrl: 'Sections/about.html',
+            controller: 'AboutController'
+        }).
+        when('/login', {
+            templateUrl: 'Sections/login.html',
+            controller: 'LoginController'
+        }).
+        when('/register', {
+            templateUrl: 'Sections/register.html',
+            controller: 'RegistrationController'
+        }).
+        when('/', {
+            redirectTo: '/moodselection'
         });
-        RestangularProvider.setRequestInterceptor(function (elem, operation, what) {
-            if (operation === 'put') {
-                elem._id = undefined;
-                return elem;
-            }
-            return elem;
-        });
-    });
-
-    var app = angular.module('app', ['RestangularApp', 'ngRoute', 'ngCookies', 'Location']);
-
-    app.config(['$routeProvider',
-            function ($routeProvider) {
-                $routeProvider.
-                    when('/moodselection', {
-                        templateUrl: 'Sections/moodselection.html',
-                        controller: 'MoodSelectionController'
-                    }).
-                    when('/location', {
-
-                        templateUrl: 'Sections/location.html',
-                        controller: 'LocationController'
-                    }).
-                    when('/history', {
-                        templateUrl: 'Sections/history.html',
-                        controller: 'HistoryController'
-                    }).
-					when('/about', {
-                        templateUrl: 'Sections/about.html',
-                        controller: 'AboutController'
-                    }).
-                    when('/login', {
-
-                        templateUrl: 'Sections/login.html',
-                        controller: 'LoginController'
-                    }).
-					when('/register', {
-
-                        templateUrl: 'Sections/register.html',
-                        controller: 'LoginController'
-                    }).
-                    when('/', {
-
-                        redirectTo: '/moodselection'
-                    });
-            }]).run(function ($rootScope, $location) {
-            // register listener to watch route changes
-            $rootScope.$on("$routeChangeStart", function (event, next, current) {
-                if ($rootScope.loggedUser == null) {
-                    // no logged user, we should be going to #login
-                    if (next.templateUrl == "Sections/login.html") {
-                        // already going to #login, no redirect needed
-                    } else {
-                        if (next.templateUrl != "Sections/register.html")//not going to #login or #register, we should redirect now
-                            $location.path("/login");
-                    }
+    }]).run(function ($rootScope, $location) {
+        // register listener to watch route changes
+        $rootScope.$on("$routeChangeStart", function (event, next, current) {
+            if ($rootScope.loggedUser == null) {
+                // no logged user, we should be going to #login
+                if (next.templateUrl == "Sections/login.html") {
+                    // already going to #login, no redirect needed
                 } else {
+                    if (next.templateUrl != "Sections/register.html")//not going to #login or #register, we should redirect now
+                        $location.path("/login");
                 }
-            });
-        }).service('Global', ['$location', '$rootScope', function ($location) {
-            var global;
-
-            return {
-                showCurrentUser: function () {
-                    return $rootScope.loggedUser;
-                }
-
             }
-        }]);
+        });
+    }).service('Global', ['$location', '$rootScope', function ($location, $rootScope) {
+        return {
+            showCurrentUser: function () {
+                return $rootScope.loggedUser;
+            }
+        };
+    }]);
 		
-    app.controller('RegistrationController', ['$scope', 'Restangular', '$routeParams', '$http',
-        function RegistrationCtrl($scope, db, $routeParams, $http) {
+    app.controller('RegistrationController', ['$scope', '$routeParams', '$http',
+        function RegistrationCtrl($scope, $routeParams, $http) {
 
             $scope.title = $routeParams.tag;
             $scope.register = function () {
@@ -100,7 +69,7 @@
                     data: JSON.stringify($scope.details)})
                     .success(function (data) {
                         alert('User created successfully');
-
+                        window.location.href = '/#/login';
                     })
                     .error(function (data) {
                         alert(data.message);
@@ -108,12 +77,12 @@
             };
         }]);
 
-    app.controller('LoginController', ['$scope', '$rootScope', 'Restangular', '$routeParams', '$http', '$cookies',
-        function LoginCtrl($scope, $rootScope, db, $routeParams, $http, $cookies) {
+    app.controller('LoginController', ['$scope', '$rootScope', '$routeParams', '$http', '$cookies',
+        function LoginCtrl($scope, $rootScope, $routeParams, $http, $cookies) {
 
             $scope.setUserProfileInViewsModel = function () {
                 $scope.profile = angular.fromJson($cookies.UserCredential);
-            }
+            };
 
             /*set defaults based on user credentials cookie*/
             if ($cookies.UserCredential != undefined) {
@@ -131,16 +100,16 @@
                 $rootScope.loggedUser = null;
                 changeLocation('/#/login', false);
 
-            }
+            };
 
             $scope.showUserName = function () {
                 if ($rootScope.loggedUser) {
                     var loggedUser = JSON.parse($rootScope.loggedUser);
-                    return loggedUser.username;
+                    return loggedUser.username || '???';
                 } else {
                     return 'Login';
                 }
-            }
+            };
 
             //be sure to inject $scope and $location
             changeLocation = function (url, forceReload) {
@@ -168,29 +137,7 @@
                     .error(function (data) {
                         alert('login error');
                     });
-            }
-
-            $scope.register = function () {
-                if ($scope.details.password !== $scope.details.confirmPassword) {
-                    alert("Passwords do not match.");
-                    return;
-                }
-
-                $http({
-                    method: 'POST',
-                    url: 'http://moodyrest.azurewebsites.net/users',
-                    headers: {'Content-Type': 'application/json'},
-                    data: JSON.stringify($scope.details)})
-                    .success(function (data) {
-                        alert('User created successfully');
-                        window.location.href = '/#/login';
-
-                    })
-                    .error(function (data) {
-                        alert(data.message);
-                    });
             };
-
         }]);
 		
    app.controller('MoodSelectionController', ['$scope', '$rootScope', '$routeParams','$http',
@@ -223,7 +170,7 @@
 					
 					"comment": "my mood is super good :-)",
 					"mood": 5				
-				}
+				};
 				
 				$http({
                     method: 'POST',
@@ -244,7 +191,7 @@
 				};
 
 				navigator.geolocation.getCurrentPosition(success, error, options);
-			}
+			};
 			
 			$scope.moodGood = function(){
 				alert('your mood is good');
@@ -256,19 +203,19 @@
 				.error(function (data) {
 					console.log(data);
                 });
-			}
+			};
 			
 			$scope.moodSoSoLaLa = function(){
 				alert('your mood is sosolala');
-			}
-			
+			};
+            
 			$scope.moodNotAmused = function(){
 				alert('you seem to be not amused...');
-			}
+			};
 			
 			$scope.moodVeryMoody = function(){
 				alert('you are very moody');
-			}
+			};
             
         }]);
 		
@@ -299,7 +246,7 @@
 			];
         }]);
 		
-   app.controller('AboutController', ['$scope', '$rootScope', '$routeParams',
+    app.controller('AboutController', ['$scope', '$rootScope', '$routeParams',
         function LoginCtrl($scope, $rootScope, $routeParams) {
 
             
@@ -381,4 +328,22 @@
 	});
    
 })();
+
+$(document).ready(function () {
+
+    $(".account").click(function () {
+        $(".submenuAccount").toggle();
+    });
+
+    $(".account").mouseup(function () {
+        return false;
+    });
+    $(".submenu").mouseup(function () {
+        return false;
+    });
+
+    $(document).mouseup(function () {
+        $(".submenuAccount").hide();
+    });
+});
 
