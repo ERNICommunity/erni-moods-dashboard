@@ -1,28 +1,45 @@
-<h1 id="moodSelectionTitle">Good Morning! How are you today?</h1>
-<div id="moodSelection" ng-controller="MoodSelectionController">	
-	<ul>
-		<li class="smileyListItem" ng-click="moodHappy()">			
-			<img class="smileyImage" src="./img/smileyVeryHappy.png" />
-			<div class="moodText">very happy</div>
-		</li>  
-		<li class="smileyListItem" ng-click="moodGood()">			
-			<img class="smileyImage" src="./img/smileyGood.png" />
-			<div class="moodText">good</div>
-			
-		</li>  
-		<li class="smileyListItem" ng-click="moodSoSoLaLa()">			
-			<img class="smileyImage" src="./img/smileySoSoLaLa.png" />
-			<div class="moodText">sosolala</div>
-			
-		</li>  
-		<li class="smileyListItem" ng-click="moodNotAmused()">			
-			<img class="smileyImage" src="./img/smileyNotAmused.png" />
-			<div class="moodText">not amused</div>
-			
-		</li>  
-		<li class="smileyListItem" ng-click="moodVeryMoody()">			
-			<img class="smileyImage" src="./img/smileyVeryMoody.png" />
-			<div class="moodText">very moody</div>
-		</li>  
-	</ul>
-</div>	
+<div ng-controller="MoodSelectionController" style="z-index: 10000">
+    <script type="text/ng-template" id="modal">
+        <form class="moodSelectionForm" ng-submit="save()">
+            <div class="modal-header">
+                <h2 class="modal-title">Add a comment to state your mood</h2>
+            </div>
+            <div class="modal-body">
+                <textarea class="moodSelectionTextArea" placeholder="Add your comment here..." ng-model="$parent.MoodComment" required=""/>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            </div>
+        </form>
+    </script>
+
+    <h1 id="moodSelectionTitle">Good Morning! How are you today?</h1>
+    <div id="moodSelection" ng-controller="MoodSelectionController">
+        <ul>
+            <li class="smileyListItem" ng-click="moodHappy()">
+                <img class="smileyImage" src="./img/smileyVeryHappy.png" />
+                <div class="moodText">very happy</div>
+            </li>  
+            <li class="smileyListItem" ng-click="moodGood()">
+                <img class="smileyImage" src="./img/smileyGood.png" />
+                <div class="moodText">good</div>
+
+            </li>  
+            <li class="smileyListItem" ng-click="moodSoSoLaLa()">
+                <img class="smileyImage" src="./img/smileySoSoLaLa.png" />
+                <div class="moodText">sosolala</div>
+
+            </li>  
+            <li class="smileyListItem" ng-click="moodNotAmused()">
+                <img class="smileyImage" src="./img/smileyNotAmused.png" />
+                <div class="moodText">not amused</div>
+
+            </li>  
+            <li class="smileyListItem" ng-click="moodVeryMoody()">
+                <img class="smileyImage" src="./img/smileyVeryMoody.png" />
+                <div class="moodText">very moody</div>
+            </li>  
+        </ul>
+    </div>
+</div>

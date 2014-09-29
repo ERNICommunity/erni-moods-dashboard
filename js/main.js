@@ -1,6 +1,8 @@
 (function () {
 
-    var app = angular.module('app', ['ngRoute', 'ngCookies', 'Location']);
+    angular.module('BootstrapApp', ['ui.bootstrap']);
+
+    var app = angular.module('app', ['ngRoute', 'BootstrapApp', 'ngCookies', 'Location']);
 
     app.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
@@ -140,86 +142,117 @@
             };
         }]);
 		
-   app.controller('MoodSelectionController', ['$scope', '$rootScope', '$routeParams','$http',
-        function LoginCtrl($scope, $rootScope, $routeParams, $http) {
+    app.controller('MoodSelectionController', ['$scope', '$rootScope', '$routeParams','$http','$modal', '$log',
+        function MoodSelectionCtrl($scope, $rootScope, $routeParams, $http, $modal, $log) {
 
 			$scope.moodHappy = function(){
-				
-				var options = {
-				  enableHighAccuracy: true,
-				  timeout: 5000,
-				  maximumAge: 0
-				};
-		
-				function success(pos) {
-				  var crd = pos.coords;
-				  //var crd =  {latitude: 46.8944, longitude: 8.1723 };
-				  console.log('Your current position is:');
-				  console.log('Latitude : ' + crd.latitude);
-				  console.log('Longitude: ' + crd.longitude);
-				  console.log('More or less ' + crd.accuracy + ' meters.');
-				  
-				  alert('you are happy today and have the location: ' + crd.latitude + ' ' + crd.longitude);
-				  
-				  				var moodEntry = {
-					"username": "stefan",
-					"location": [
-						crd.latitude,
-						crd.longitude
-					],
-					
-					"comment": "my mood is super good :-)",
-					"mood": 5				
-				};
-				
-				$http({
-                    method: 'POST',
-                    url: 'http://moodyrest.azurewebsites.net/moods',
-                    headers: {'Content-Type': 'application/json'},
-                    data: JSON.stringify(moodEntry)})
-                    .success(function (data) {
-                        alert('Your mood was successfully added to the data base!');
-                    })
-                    .error(function (data) {
-                        alert(data.message);
-                    });
-				  
-				};
-
-				function error(err) {
-				  console.warn('ERROR(' + err.code + '): ' + err.message);
-				};
-
-				navigator.geolocation.getCurrentPosition(success, error, options);
+                GetGeoLocation($rootScope, $log, $http, $modal, 1);
 			};
 			
 			$scope.moodGood = function(){
-				alert('your mood is good');
-				
-				$http({ method: 'GET', url: 'http://moodyrest.azurewebsites.net/moods'})
-					.success(function(data) {
-					console.log(data);
-				})
-				.error(function (data) {
-					console.log(data);
-                });
+                GetGeoLocation($rootScope, $log, $http, $modal, 2);
 			};
 			
 			$scope.moodSoSoLaLa = function(){
-				alert('your mood is sosolala');
+                GetGeoLocation($rootScope, $log, $http, $modal, 3);
 			};
             
 			$scope.moodNotAmused = function(){
-				alert('you seem to be not amused...');
+                GetGeoLocation($rootScope, $log, $http, $modal, 4);
 			};
 			
 			$scope.moodVeryMoody = function(){
-				alert('you are very moody');
+                GetGeoLocation($rootScope, $log, $http, $modal, 5);
 			};
-            
         }]);
-		
-	app.controller('HistoryController', ['$scope', '$rootScope', '$routeParams',
+
+    var GetGeoLocation = function($rootScope, $log, $http, $modal, moodIndex){
+
+        var options = {
+            enableHighAccuracy: false,
+            timeout: 5000,
+            maximumAge: 0
+        };
+
+        function success(position) {
+            var coordinates = position.coords;
+            CreateMoodEntryWithComment($rootScope, $log, $http, $modal, moodIndex, coordinates);
+        };
+
+        function error(err) {
+            console.warn('ERROR(' + err.code + '): ' + err.message);
+            alert('determining your position did not work! ' + err.code + ' ' + err.message);
+        };
+
+        navigator.geolocation.getCurrentPosition(success, error, options);
+    }
+
+    var CreateMoodEntryWithComment = function($rootScope, $log, $http, $modal, moodIndex, coordinates){
+
+        // open the dialog to add a comment
+        var modalInstance = $modal.open({
+            templateUrl: 'modal',
+            controller: MoodCommentInstanceController,
+            resolve: {
+                userCoordinates: function () {
+                    return coordinates;
+                },
+                selectedMood: function(){
+                    return moodIndex;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (moodComment) {
+            $log.info('the mood comment is:' + moodComment + ' moodIndex: ' + moodIndex);
+
+            var moodEntry = {
+                "username": JSON.parse($rootScope.loggedUser).username,
+                "location": [
+                    coordinates.latitude,
+                    coordinates.longitude
+                ],
+
+                "comment": moodComment,
+                "mood": moodIndex
+            };
+
+             $http({
+             method: 'POST',
+             url: 'http://moodyrest.azurewebsites.net/moods',
+             headers: {'Content-Type': 'application/json'},
+             data: JSON.stringify(moodEntry)})
+             .success(function (data) {
+             alert('Your mood was successfully added to the data base!');
+             })
+             .error(function (data) {
+             alert(data.message);
+             });
+
+        }, function () {
+            $log.info('Mood Comment Modal dismissed at: ' + new Date());
+        });
+
+    }
+
+    var MoodCommentInstanceController = function ($scope, $modalInstance, userCoordinates, selectedMood) {
+
+        $scope.userCoordinates = userCoordinates;
+        $scope.selectedMood = selectedMood;
+        $scope.MoodComment = "";
+
+        $scope.save = function () {
+            $modalInstance.close($scope.MoodComment);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    };
+
+
+
+    app.controller('HistoryController', ['$scope', '$rootScope', '$routeParams',
         function LoginCtrl($scope, $rootScope, $routeParams) {
 
             $scope.moodHistory = [
