@@ -1,4 +1,11 @@
 (function(){
+    Array.prototype.contains = function ( object ) {
+        for (i in this) {
+            if (this[i] == object) return true;
+        }
+        return false;
+    }
+
     var app = angular.module('Location', ['google-maps']);
     
     var moodsBaseUrl = 'http://moodyrest.azurewebsites.net/moods';
@@ -10,9 +17,33 @@
         $scope.moodMarkers = [];
 
         $http.get(moodsBaseUrl)
-        .success(function (data) {
-            //moods = data;
-            $scope.moodMarkers = data.map(function(mood){
+        .success(function (moodData) {
+            var latestMoodItemPerUser = new Array();
+            latestMoodItemPerUser.usernames = new Array();
+
+            moodData.forEach(function(moodEntry){
+                if(!latestMoodItemPerUser.hasOwnProperty(moodEntry.username)){
+                    latestMoodItemPerUser[moodEntry.username] = moodEntry;
+                    latestMoodItemPerUser.usernames.push(moodEntry.username);
+                }
+                else{
+                    var latestMoodDate = new Date(latestMoodItemPerUser[moodEntry.username].time);
+                    var newMoodDate = new Date(moodEntry.time);
+
+                    if(latestMoodDate.getTime() < newMoodDate.getTime()){
+                        latestMoodItemPerUser[moodEntry.username] = moodEntry;
+                    }
+                }
+            });
+
+            var latestMoodItems = new Array();
+
+            for(var j = 0; j < latestMoodItemPerUser.usernames.length; j++){
+                latestMoodItems.push(latestMoodItemPerUser[latestMoodItemPerUser.usernames[j]]);
+            }
+
+
+            $scope.moodMarkers = latestMoodItems.map(function(mood){
                     return {
                         latitude: mood.location[0],
                         longitude: mood.location[1],
